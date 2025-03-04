@@ -28,7 +28,7 @@ export interface Name {
 }
 
 // Cache for data
-const cache = {
+export const cache = {
   movies: null as Movie[] | null,
   principals: null as Principal[] | null,
   names: null as Name[] | null,

@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useMovieData } from "../hooks/useMovieData";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 import MovieCard from "../components/ui/MovieCard";
+import Pagination from "../components/ui/Pagination";
+import Filters from "../components/ui/Filters";
 
 const HomePage: React.FC = () => {
   const { movies, loading, error, genres } = useMovieData();
@@ -70,7 +72,7 @@ const HomePage: React.FC = () => {
   const minYear = Math.min(...movies.map((m) => parseInt(m.year) || 2030));
   const maxYear = Math.max(...movies.map((m) => parseInt(m.year) || 1900));
 
-  if (loading) return <LoadingSpinner />;
+  if (loading) return <LoadingSpinner message="Loading movies..." />;
   if (error)
     return <div className="text-red-500 text-center py-8">{error}</div>;
 
@@ -84,114 +86,21 @@ const HomePage: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-lg shadow-md p-6 space-y-4">
-        <h2 className="text-xl font-semibold text-gray-800">Filters</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Search */}
-          <div>
-            <label
-              htmlFor="search"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Search
-            </label>
-            <input
-              type="text"
-              id="search"
-              placeholder="Search by title..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-
-          {/* Genre Filter */}
-          <div>
-            <label
-              htmlFor="genre"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Genre
-            </label>
-            <select
-              id="genre"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={selectedGenre}
-              onChange={(e) => setSelectedGenre(e.target.value)}
-            >
-              <option value="">All Genres</option>
-              {genres.map((genre) => (
-                <option key={genre} value={genre}>
-                  {genre}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Sort By */}
-          <div>
-            <label
-              htmlFor="sortBy"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Sort By
-            </label>
-            <div className="flex">
-              <select
-                id="sortBy"
-                className="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={sortBy}
-                onChange={(e) =>
-                  setSortBy(e.target.value as "title" | "year" | "runtime")
-                }
-              >
-                <option value="title">Title</option>
-                <option value="year">Year</option>
-                <option value="runtime">Runtime</option>
-              </select>
-              <button
-                className="px-3 py-2 bg-gray-100 border border-gray-300 border-l-0 rounded-r-md hover:bg-gray-200"
-                onClick={() =>
-                  setSortOrder(sortOrder === "asc" ? "desc" : "asc")
-                }
-                aria-label={`Sort ${sortOrder === "asc" ? "descending" : "ascending"}`}
-              >
-                {sortOrder === "asc" ? "↑" : "↓"}
-              </button>
-            </div>
-          </div>
-
-          {/* Year Range */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Year Range: {yearRange[0]} - {yearRange[1]}
-            </label>
-            <div className="px-2">
-              <input
-                type="range"
-                min={minYear}
-                max={maxYear}
-                value={yearRange[0]}
-                onChange={(e) =>
-                  setYearRange([parseInt(e.target.value), yearRange[1]])
-                }
-                className="w-full"
-              />
-              <input
-                type="range"
-                min={minYear}
-                max={maxYear}
-                value={yearRange[1]}
-                onChange={(e) =>
-                  setYearRange([yearRange[0], parseInt(e.target.value)])
-                }
-                className="w-full"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      <Filters
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        selectedGenre={selectedGenre}
+        onGenreChange={setSelectedGenre}
+        sortBy={sortBy}
+        onSortByChange={setSortBy}
+        sortOrder={sortOrder}
+        onSortOrderChange={setSortOrder}
+        yearRange={yearRange}
+        onYearRangeChange={setYearRange}
+        genres={genres}
+        minYear={minYear}
+        maxYear={maxYear}
+      />
 
       {/* Results */}
       <div className="bg-white rounded-lg shadow-md p-6">
@@ -213,66 +122,12 @@ const HomePage: React.FC = () => {
             </div>
 
             {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-center mt-8">
-                <nav
-                  className="flex items-center space-x-2"
-                  aria-label="Pagination"
-                >
-                  <button
-                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                    disabled={currentPage === 1}
-                    className="px-3 py-1 rounded border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                    aria-label="Previous page"
-                  >
-                    Previous
-                  </button>
-
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    // Show pages around current page
-                    let pageNum;
-                    if (totalPages <= 5) {
-                      pageNum = i + 1;
-                    } else if (currentPage <= 3) {
-                      pageNum = i + 1;
-                    } else if (currentPage >= totalPages - 2) {
-                      pageNum = totalPages - 4 + i;
-                    } else {
-                      pageNum = currentPage - 2 + i;
-                    }
-
-                    return (
-                      <button
-                        key={pageNum}
-                        onClick={() => setCurrentPage(pageNum)}
-                        className={`px-3 py-1 rounded ${
-                          currentPage === pageNum
-                            ? "bg-blue-600 text-white"
-                            : "border border-gray-300 hover:bg-gray-100"
-                        }`}
-                        aria-label={`Page ${pageNum}`}
-                        aria-current={
-                          currentPage === pageNum ? "page" : undefined
-                        }
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  })}
-
-                  <button
-                    onClick={() =>
-                      setCurrentPage(Math.min(totalPages, currentPage + 1))
-                    }
-                    disabled={currentPage === totalPages}
-                    className="px-3 py-1 rounded border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                    aria-label="Next page"
-                  >
-                    Next
-                  </button>
-                </nav>
-              </div>
-            )}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              className="mt-8"
+            />
           </>
         ) : (
           <div className="text-center py-12 text-gray-500">
@@ -311,4 +166,3 @@ const HomePage: React.FC = () => {
 };
 
 export default HomePage;
-
