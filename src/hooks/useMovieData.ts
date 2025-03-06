@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
-import axios from "axios";
+import { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
 
 // Types
 export interface Movie {
@@ -47,9 +47,9 @@ export const useMovieData = () => {
   const genres = [
     ...new Set(
       movies
-        .filter((movie) => movie.genre)
-        .flatMap((movie) => movie.genre.split(","))
-        .map((genre) => genre.trim()),
+        .filter(movie => movie.genre)
+        .flatMap(movie => movie.genre.split(','))
+        .map(genre => genre.trim()),
     ),
   ].sort();
 
@@ -61,10 +61,7 @@ export const useMovieData = () => {
 
       const now = Date.now();
       const isCacheValid =
-        cache.movies &&
-        cache.principals &&
-        cache.names &&
-        now - cache.timestamp < cache.expiryTime;
+        cache.movies && cache.principals && cache.names && now - cache.timestamp < cache.expiryTime;
 
       if (isCacheValid) {
         setMovies(cache.movies!);
@@ -74,17 +71,11 @@ export const useMovieData = () => {
         return;
       }
       // Fetch movies
-      const moviesData = await axios.get<Movie[]>(
-        "http://127.0.0.1:8000/api/movies/",
-      );
+      const moviesData = await axios.get<Movie[]>('http://127.0.0.1:8000/api/movies/');
       // Fetch names
-      const namesData = await axios.get<Name[]>(
-        "http://127.0.0.1:8000/api/names/",
-      );
+      const namesData = await axios.get<Name[]>('http://127.0.0.1:8000/api/names/');
       // Fetch principals for the selected movie
-      const principalsData = await axios.get<Principal[]>(
-        "http://127.0.0.1:8000/api/principals/",
-      );
+      const principalsData = await axios.get<Principal[]>('http://127.0.0.1:8000/api/principals/');
 
       // Update cache
       cache.movies = moviesData.data;
@@ -96,8 +87,8 @@ export const useMovieData = () => {
       setPrincipals(principalsData.data);
       setNames(namesData.data);
     } catch (err) {
-      console.error("Error fetching data:", err);
-      setError("Failed to load movie data. Please try again later.");
+      console.error('Error fetching data:', err);
+      setError('Failed to load movie data. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -110,8 +101,8 @@ export const useMovieData = () => {
   // Get actor name by nconst
   const getActorName = useCallback(
     (nconst: string) => {
-      const actor = names.find((name) => name.nconst === nconst);
-      return actor ? actor.name : "Unknown Actor";
+      const actor = names.find(name => name.nconst === nconst);
+      return actor ? actor.name : 'Unknown Actor';
     },
     [names],
   );
@@ -119,7 +110,7 @@ export const useMovieData = () => {
   // Get principals for a specific movie
   const getMoviePrincipals = useCallback(
     (movieId: string) => {
-      return principals.filter((principal) => principal.tconst === movieId);
+      return principals.filter(principal => principal.tconst === movieId);
     },
     [principals],
   );
@@ -127,7 +118,7 @@ export const useMovieData = () => {
   // Get movie by ID
   const getMovie = useCallback(
     (id: string) => {
-      return movies.find((movie) => movie.tconst === id) || null;
+      return movies.find(movie => movie.tconst === id) || null;
     },
     [movies],
   );
@@ -137,23 +128,19 @@ export const useMovieData = () => {
     (movie: Movie, limit: number = 6) => {
       if (!movie || !movie.genre) return [];
 
-      const movieGenres = movie.genre.split(",").map((g) => g.trim());
+      const movieGenres = movie.genre.split(',').map(g => g.trim());
 
       return movies
         .filter(
-          (m) =>
+          m =>
             m.tconst !== movie.tconst && // Not the same movie
             m.genre && // Has genres
-            movieGenres.some((genre) => m.genre.includes(genre)), // Shares at least one genre
+            movieGenres.some(genre => m.genre.includes(genre)), // Shares at least one genre
         )
         .sort((a, b) => {
           // Count matching genres for each movie
-          const aMatches = movieGenres.filter((genre) =>
-            a.genre.includes(genre),
-          ).length;
-          const bMatches = movieGenres.filter((genre) =>
-            b.genre.includes(genre),
-          ).length;
+          const aMatches = movieGenres.filter(genre => a.genre.includes(genre)).length;
+          const bMatches = movieGenres.filter(genre => b.genre.includes(genre)).length;
 
           // Sort by number of matching genres (descending)
           if (aMatches !== bMatches) return bMatches - aMatches;

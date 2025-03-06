@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 interface PaginationProps {
   currentPage: number;
@@ -11,7 +11,7 @@ const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   totalPages,
   onPageChange,
-  className = "",
+  className = '',
 }) => {
   // Generate page numbers to display
   const getPageNumbers = () => {
@@ -51,23 +51,23 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
-          className="px-3 py-1 rounded border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="rounded border border-gray-300 px-3 py-1 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
           aria-label="Previous page"
         >
           Previous
         </button>
 
-        {getPageNumbers().map((pageNum) => (
+        {getPageNumbers().map(pageNum => (
           <button
             key={pageNum}
             onClick={() => onPageChange(pageNum)}
-            className={`px-3 py-1 rounded ${
+            className={`rounded px-3 py-1 ${
               currentPage === pageNum
-                ? "bg-blue-600 text-white"
-                : "border border-gray-300 hover:bg-gray-100"
+                ? 'bg-blue-600 text-white'
+                : 'border border-gray-300 hover:bg-gray-100'
             }`}
             aria-label={`Page ${pageNum}`}
-            aria-current={currentPage === pageNum ? "page" : undefined}
+            aria-current={currentPage === pageNum ? 'page' : undefined}
           >
             {pageNum}
           </button>
@@ -76,7 +76,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <button
           onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
           disabled={currentPage === totalPages}
-          className="px-3 py-1 rounded border border-gray-300 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="rounded border border-gray-300 px-3 py-1 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
           aria-label="Next page"
         >
           Next

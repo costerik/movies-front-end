@@ -1,17 +1,17 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { useMovieData } from "../hooks/useMovieData";
-import LoadingSpinner from "../components/ui/LoadingSpinner";
-import MovieCard from "../components/ui/MovieCard";
-import Pagination from "../components/ui/Pagination";
-import Filters from "../components/ui/Filters";
+import React, { useState, useEffect, useMemo } from 'react';
+import { useMovieData } from '../hooks/useMovieData';
+import LoadingSpinner from '../components/ui/LoadingSpinner';
+import MovieCard from '../components/ui/MovieCard';
+import Pagination from '../components/ui/Pagination';
+import Filters from '../components/ui/Filters';
 
 const HomePage: React.FC = () => {
   const { movies, loading, error, genres } = useMovieData();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedGenre, setSelectedGenre] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState<string>('');
   const [yearRange, setYearRange] = useState<[number, number]>([1900, 2030]);
-  const [sortBy, setSortBy] = useState<"title" | "year" | "runtime">("year");
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [sortBy, setSortBy] = useState<'title' | 'year' | 'runtime'>('year');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const moviesPerPage = 20;
 
@@ -23,17 +23,14 @@ const HomePage: React.FC = () => {
   // Filter and sort movies
   const filteredMovies = useMemo(() => {
     return movies
-      .filter((movie) => {
+      .filter(movie => {
         // Search filter
-        const matchesSearch = movie.title
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase());
+        const matchesSearch = movie.title.toLowerCase().includes(searchTerm.toLowerCase());
 
         // Genre filter
         const matchesGenre =
           !selectedGenre ||
-          (movie.genre &&
-            movie.genre.toLowerCase().includes(selectedGenre.toLowerCase()));
+          (movie.genre && movie.genre.toLowerCase().includes(selectedGenre.toLowerCase()));
 
         // Year filter
         const year = parseInt(movie.year) || 0;
@@ -42,20 +39,18 @@ const HomePage: React.FC = () => {
         return matchesSearch && matchesGenre && matchesYear;
       })
       .sort((a, b) => {
-        if (sortBy === "title") {
-          return sortOrder === "asc"
+        if (sortBy === 'title') {
+          return sortOrder === 'asc'
             ? a.title.localeCompare(b.title)
             : b.title.localeCompare(a.title);
-        } else if (sortBy === "year") {
+        } else if (sortBy === 'year') {
           const yearA = parseInt(a.year) || 0;
           const yearB = parseInt(b.year) || 0;
-          return sortOrder === "asc" ? yearA - yearB : yearB - yearA;
-        } else if (sortBy === "runtime") {
+          return sortOrder === 'asc' ? yearA - yearB : yearB - yearA;
+        } else if (sortBy === 'runtime') {
           const runtimeA = parseInt(a.runtime) || 0;
           const runtimeB = parseInt(b.runtime) || 0;
-          return sortOrder === "asc"
-            ? runtimeA - runtimeB
-            : runtimeB - runtimeA;
+          return sortOrder === 'asc' ? runtimeA - runtimeB : runtimeB - runtimeA;
         }
         return 0;
       });
@@ -69,20 +64,17 @@ const HomePage: React.FC = () => {
   );
 
   // Year range for the slider
-  const minYear = Math.min(...movies.map((m) => parseInt(m.year) || 2030));
-  const maxYear = Math.max(...movies.map((m) => parseInt(m.year) || 1900));
+  const minYear = Math.min(...movies.map(m => parseInt(m.year) || 2030));
+  const maxYear = Math.max(...movies.map(m => parseInt(m.year) || 1900));
 
   if (loading) return <LoadingSpinner message="Loading movies..." />;
-  if (error)
-    return <div className="text-red-500 text-center py-8">{error}</div>;
+  if (error) return <div className="py-8 text-center text-red-500">{error}</div>;
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-lg p-6 text-white">
-        <h1 className="text-3xl font-bold mb-2">Discover Movies</h1>
-        <p className="opacity-90">
-          Explore our collection of classic and modern films
-        </p>
+      <div className="rounded-lg bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white">
+        <h1 className="mb-2 text-3xl font-bold">Discover Movies</h1>
+        <p className="opacity-90">Explore our collection of classic and modern films</p>
       </div>
 
       {/* Filters */}
@@ -103,20 +95,17 @@ const HomePage: React.FC = () => {
       />
 
       {/* Results */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex justify-between items-center mb-4">
+      <div className="rounded-lg bg-white p-6 shadow-md">
+        <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-800">
-            Movies{" "}
-            <span className="text-gray-500 text-sm">
-              ({filteredMovies.length} results)
-            </span>
+            Movies <span className="text-sm text-gray-500">({filteredMovies.length} results)</span>
           </h2>
         </div>
 
         {paginatedMovies.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {paginatedMovies.map((movie) => (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {paginatedMovies.map(movie => (
                 <MovieCard key={movie.tconst} movie={movie} />
               ))}
             </div>
@@ -130,10 +119,10 @@ const HomePage: React.FC = () => {
             />
           </>
         ) : (
-          <div className="text-center py-12 text-gray-500">
+          <div className="py-12 text-center text-gray-500">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12 mx-auto text-gray-400 mb-4"
+              className="mx-auto mb-4 h-12 w-12 text-gray-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -148,13 +137,13 @@ const HomePage: React.FC = () => {
             <p className="text-lg">No movies found matching your filters</p>
             <button
               onClick={() => {
-                setSearchTerm("");
-                setSelectedGenre("");
+                setSearchTerm('');
+                setSelectedGenre('');
                 setYearRange([minYear, maxYear]);
-                setSortBy("year");
-                setSortOrder("desc");
+                setSortBy('year');
+                setSortOrder('desc');
               }}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+              className="mt-4 rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
             >
               Reset Filters
             </button>
