@@ -147,183 +147,183 @@ const MovieDetailsPage: React.FC = () => {
                 </div>
               </div>
             )}
-
-            <div className="mt-6">
-              <div className="flex border-b">
-                <button
-                  className={`px-4 py-2 text-sm font-medium ${
-                    activeTab === 'cast'
-                      ? 'border-b-2 border-blue-600 text-blue-600'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                  onClick={() => setActiveTab('cast')}
-                  aria-selected={activeTab === 'cast'}
-                  role="tab"
-                >
-                  Cast & Crew
-                </button>
-                <button
-                  className={`px-4 py-2 text-sm font-medium ${
-                    activeTab === 'details'
-                      ? 'border-b-2 border-blue-600 text-blue-600'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                  onClick={() => setActiveTab('details')}
-                  aria-selected={activeTab === 'details'}
-                  role="tab"
-                >
-                  Details
-                </button>
-                <button
-                  className={`px-4 py-2 text-sm font-medium ${
-                    activeTab === 'similar'
-                      ? 'border-b-2 border-blue-600 text-blue-600'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                  onClick={() => setActiveTab('similar')}
-                  aria-selected={activeTab === 'similar'}
-                  role="tab"
-                >
-                  Similar Movies
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
+      <div className="mt-6">
+        <div className="flex border-b">
+          <button
+            className={`px-4 py-2 text-sm font-medium ${
+              activeTab === 'cast'
+                ? 'border-b-2 border-blue-600 text-blue-600'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+            onClick={() => setActiveTab('cast')}
+            aria-selected={activeTab === 'cast'}
+            role="tab"
+          >
+            Cast & Crew
+          </button>
+          <button
+            className={`px-4 py-2 text-sm font-medium ${
+              activeTab === 'details'
+                ? 'border-b-2 border-blue-600 text-blue-600'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+            onClick={() => setActiveTab('details')}
+            aria-selected={activeTab === 'details'}
+            role="tab"
+          >
+            Details
+          </button>
+          <button
+            className={`px-4 py-2 text-sm font-medium ${
+              activeTab === 'similar'
+                ? 'border-b-2 border-blue-600 text-blue-600'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+            onClick={() => setActiveTab('similar')}
+            aria-selected={activeTab === 'similar'}
+            role="tab"
+          >
+            Similar Movies
+          </button>
+        </div>
+        {/* Tab Content */}
+        <div className="rounded-lg bg-white p-6 shadow-md">
+          {activeTab === 'cast' && (
+            <div className="animate-fadeIn space-y-6" role="tabpanel" aria-label="Cast & Crew">
+              <h2 className="mb-4 text-xl font-semibold text-gray-800">Cast & Crew</h2>
 
-      {/* Tab Content */}
-      <div className="rounded-lg bg-white p-6 shadow-md">
-        {activeTab === 'cast' && (
-          <div className="animate-fadeIn space-y-6" role="tabpanel" aria-label="Cast & Crew">
-            <h2 className="mb-4 text-xl font-semibold text-gray-800">Cast & Crew</h2>
-
-            {sortedCategories.length > 0 ? (
-              sortedCategories.map(category => (
-                <div key={category} className="mb-8">
-                  <h3 className="mb-3 text-lg font-medium capitalize text-gray-800">
-                    {category.replace('_', ' ')}s
-                  </h3>
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                    {principalsByCategory[category].map(principal => (
-                      <div
-                        key={principal.id}
-                        className="rounded-lg bg-gray-50 p-4 transition-shadow hover:shadow-md"
-                      >
-                        <div className="font-medium text-gray-900">
-                          {getActorName(principal.nconst)}
-                        </div>
-                        {principal.characters && principal.characters.length > 0 && (
-                          <div className="mt-1 text-sm text-gray-600">
-                            as {principal.characters.join(', ')}
+              {sortedCategories.length > 0 ? (
+                sortedCategories.map(category => (
+                  <div key={category} className="mb-8">
+                    <h3 className="mb-3 text-lg font-medium capitalize text-gray-800">
+                      {category.replace('_', ' ')}s
+                    </h3>
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                      {principalsByCategory[category].map(principal => (
+                        <div
+                          key={principal.id}
+                          className="rounded-lg bg-gray-50 p-4 transition-shadow hover:shadow-md"
+                        >
+                          <div className="font-medium text-gray-900">
+                            {getActorName(principal.nconst)}
                           </div>
-                        )}
-                      </div>
-                    ))}
+                          {principal.characters && principal.characters.length > 0 && (
+                            <div className="mt-1 text-sm text-gray-600">
+                              as {principal.characters.join(', ')}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="py-8 text-center text-gray-500">
+                  <p>No cast or crew information available for this movie.</p>
                 </div>
-              ))
-            ) : (
-              <div className="py-8 text-center text-gray-500">
-                <p>No cast or crew information available for this movie.</p>
-              </div>
-            )}
-          </div>
-        )}
+              )}
+            </div>
+          )}
 
-        {activeTab === 'details' && (
-          <div className="animate-fadeIn space-y-6" role="tabpanel" aria-label="Movie Details">
-            <h2 className="mb-4 text-xl font-semibold text-gray-800">Movie Details</h2>
+          {activeTab === 'details' && (
+            <div className="animate-fadeIn space-y-6" role="tabpanel" aria-label="Movie Details">
+              <h2 className="mb-4 text-xl font-semibold text-gray-800">Movie Details</h2>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <div>
-                <h3 className="mb-3 text-lg font-medium text-gray-800">Information</h3>
-                <table className="w-full">
-                  <tbody>
-                    <tr className="border-b">
-                      <td className="py-2 text-gray-600">Title</td>
-                      <td className="py-2 font-medium text-gray-900">{movie.title}</td>
-                    </tr>
-                    {movie.original_title !== movie.title && (
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div>
+                  <h3 className="mb-3 text-lg font-medium text-gray-800">Information</h3>
+                  <table className="w-full">
+                    <tbody>
                       <tr className="border-b">
-                        <td className="py-2 text-gray-600">Original Title</td>
-                        <td className="py-2 font-medium text-gray-900">{movie.original_title}</td>
+                        <td className="py-2 text-gray-600">Title</td>
+                        <td className="py-2 font-medium text-gray-900">{movie.title}</td>
                       </tr>
-                    )}
-                    <tr className="border-b">
-                      <td className="py-2 text-gray-600">Year</td>
-                      <td className="py-2 font-medium text-gray-900">{movie.year}</td>
-                    </tr>
-                    {movie.runtime && (
+                      {movie.original_title !== movie.title && (
+                        <tr className="border-b">
+                          <td className="py-2 text-gray-600">Original Title</td>
+                          <td className="py-2 font-medium text-gray-900">{movie.original_title}</td>
+                        </tr>
+                      )}
                       <tr className="border-b">
-                        <td className="py-2 text-gray-600">Runtime</td>
-                        <td className="py-2 font-medium text-gray-900">{movie.runtime} minutes</td>
+                        <td className="py-2 text-gray-600">Year</td>
+                        <td className="py-2 font-medium text-gray-900">{movie.year}</td>
                       </tr>
-                    )}
-                    {movie.genre && (
-                      <tr className="border-b">
-                        <td className="py-2 text-gray-600">Genres</td>
-                        <td className="py-2 font-medium text-gray-900">{movie.genre}</td>
+                      {movie.runtime && (
+                        <tr className="border-b">
+                          <td className="py-2 text-gray-600">Runtime</td>
+                          <td className="py-2 font-medium text-gray-900">
+                            {movie.runtime} minutes
+                          </td>
+                        </tr>
+                      )}
+                      {movie.genre && (
+                        <tr className="border-b">
+                          <td className="py-2 text-gray-600">Genres</td>
+                          <td className="py-2 font-medium text-gray-900">{movie.genre}</td>
+                        </tr>
+                      )}
+                      <tr>
+                        <td className="py-2 text-gray-600">ID</td>
+                        <td className="py-2 font-medium text-gray-900">{movie.tconst}</td>
                       </tr>
-                    )}
-                    <tr>
-                      <td className="py-2 text-gray-600">ID</td>
-                      <td className="py-2 font-medium text-gray-900">{movie.tconst}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                    </tbody>
+                  </table>
+                </div>
 
-              <div>
-                <h3 className="mb-3 text-lg font-medium text-gray-800">Statistics</h3>
-                <div className="rounded-lg bg-gray-50 p-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="rounded-lg bg-white p-4 text-center shadow-sm">
-                      <div className="text-3xl font-bold text-blue-600">{principals.length}</div>
-                      <div className="mt-1 text-sm text-gray-600">Cast & Crew</div>
-                    </div>
-                    <div className="rounded-lg bg-white p-4 text-center shadow-sm">
-                      <div className="text-3xl font-bold text-blue-600">
-                        {sortedCategories.length}
+                <div>
+                  <h3 className="mb-3 text-lg font-medium text-gray-800">Statistics</h3>
+                  <div className="rounded-lg bg-gray-50 p-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="rounded-lg bg-white p-4 text-center shadow-sm">
+                        <div className="text-3xl font-bold text-blue-600">{principals.length}</div>
+                        <div className="mt-1 text-sm text-gray-600">Cast & Crew</div>
                       </div>
-                      <div className="mt-1 text-sm text-gray-600">Departments</div>
-                    </div>
-                    <div className="rounded-lg bg-white p-4 text-center shadow-sm">
-                      <div className="text-3xl font-bold text-blue-600">
-                        {movie.genre ? movie.genre.split(',').length : 0}
+                      <div className="rounded-lg bg-white p-4 text-center shadow-sm">
+                        <div className="text-3xl font-bold text-blue-600">
+                          {sortedCategories.length}
+                        </div>
+                        <div className="mt-1 text-sm text-gray-600">Departments</div>
                       </div>
-                      <div className="mt-1 text-sm text-gray-600">Genres</div>
-                    </div>
-                    <div className="rounded-lg bg-white p-4 text-center shadow-sm">
-                      <div className="text-3xl font-bold text-blue-600">
-                        {2025 - parseInt(movie.year)}
+                      <div className="rounded-lg bg-white p-4 text-center shadow-sm">
+                        <div className="text-3xl font-bold text-blue-600">
+                          {movie.genre ? movie.genre.split(',').length : 0}
+                        </div>
+                        <div className="mt-1 text-sm text-gray-600">Genres</div>
                       </div>
-                      <div className="mt-1 text-sm text-gray-600">Years Old</div>
+                      <div className="rounded-lg bg-white p-4 text-center shadow-sm">
+                        <div className="text-3xl font-bold text-blue-600">
+                          {2025 - parseInt(movie.year)}
+                        </div>
+                        <div className="mt-1 text-sm text-gray-600">Years Old</div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {activeTab === 'similar' && (
-          <div className="animate-fadeIn space-y-6" role="tabpanel" aria-label="Similar Movies">
-            <h2 className="mb-4 text-xl font-semibold text-gray-800">Similar Movies</h2>
+          {activeTab === 'similar' && (
+            <div className="animate-fadeIn space-y-6" role="tabpanel" aria-label="Similar Movies">
+              <h2 className="mb-4 text-xl font-semibold text-gray-800">Similar Movies</h2>
 
-            {similarMovies.length > 0 ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {similarMovies.map(similarMovie => (
-                  <MovieCard key={similarMovie.tconst} movie={similarMovie} />
-                ))}
-              </div>
-            ) : (
-              <div className="py-8 text-center text-gray-500">
-                <p>No similar movies found.</p>
-              </div>
-            )}
-          </div>
-        )}
+              {similarMovies.length > 0 ? (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {similarMovies.map(similarMovie => (
+                    <MovieCard key={similarMovie.tconst} movie={similarMovie} />
+                  ))}
+                </div>
+              ) : (
+                <div className="py-8 text-center text-gray-500">
+                  <p>No similar movies found.</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
