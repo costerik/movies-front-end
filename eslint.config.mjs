@@ -7,6 +7,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import vitest from '@vitest/eslint-plugin';
 import jestDom from 'eslint-plugin-jest-dom';
 import testingLibrary from 'eslint-plugin-testing-library';
+import eslintConfigPrettier from 'eslint-config-prettier/flat';
 
 export default tseslint.config(
   { ignores: ['dist'] },
@@ -29,6 +30,7 @@ export default tseslint.config(
       vitest.configs.recommended,
       jestDom.configs['flat/recommended'],
       testingLibrary.configs['flat/react'],
+      eslintConfigPrettier,
     ],
     plugins: {
       react,
